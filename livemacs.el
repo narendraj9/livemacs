@@ -65,13 +65,21 @@ Binds \[livemacs-stop] to `livemacs-stop'."
   :type 'keymap
   :group 'livemacs)
 
+(defun livemacs-hide-text (beg end)
+  "Hide text in region [BEG, END)."
+  (put-text-property beg end 'invisible t))
+
+(defun livemacs-show-text (beg end)
+  "Show text in region [BEG, END)."
+  (put-text-property beg end 'invisible nil))
+
 (defun livemacs-advance ()
   "Advances the visible territory of text in current buffer."
   (interactive)
   (let ((next-buf-pos (min (funcall livemacs-next-position
                                     livemacs-buffer-position)
                            (point-max))))
-    (put-text-property livemacs-buffer-position next-buf-pos 'invisible nil)
+    (livemacs-show-text livemacs-buffer-position next-buf-pos)
     (setq livemacs-buffer-position next-buf-pos)
     (goto-char livemacs-buffer-position)))
 
@@ -81,12 +89,13 @@ Binds \[livemacs-stop] to `livemacs-stop'."
   (let ((prev-buf-pos (max (funcall livemacs-prev-position
                                     livemacs-buffer-position)
                            1)))
-    (put-text-property prev-buf-pos livemacs-buffer-position 'invisble t)
-    (setq livemacs-buffer-position prev-buf-pos)))
+    (livemacs-hide-text prev-buf-pos livemacs-buffer-position)
+    (setq livemacs-buffer-position prev-buf-pos)
+    (goto-char livemacs-buffer-position)))
 
 (defun livemacs-reset ()
   "Reset `livemacs' maintained state in current buffer."
-  (put-text-property (point-min) (point-max) 'invisible nil)
+  (livemacs-show-text (point-min) (point-max))
   (setq livemacs-buffer-position 1)
   (setq livemacs-exitfun nil))
 
@@ -97,7 +106,7 @@ Replaying is stopped when any key other than those specified in
   (interactive)
   (setq livemacs-exitfun
         (set-transient-map livemacs-transient-map t #'livemacs-reset))
-  (put-text-property (point-min) (point-max) 'invisible t)
+  (livemacs-hide-text (point-min) (point-max))
   (message "Started livemacs!"))
 
 (defun livemacs-stop ()
