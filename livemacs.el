@@ -70,7 +70,8 @@ Binds <backspace> to `livemacs-regress'."
                                     livemacs-buffer-position)
                            (point-max))))
     (put-text-property livemacs-buffer-position next-buf-pos 'invisible nil)
-    (setq livemacs-buffer-position next-buf-pos)))
+    (setq livemacs-buffer-position next-buf-pos)
+    (goto-char livemacs-buffer-position)))
 
 (defun livemacs-regress ()
   "Move back hiding text that was shown earlier in buffer."
