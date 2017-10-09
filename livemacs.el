@@ -55,7 +55,7 @@ See `livemacs-next-position'."
           (append [[tab] [space] [return]]
                   (mapcar #'char-to-string (number-sequence ?A ?z))))
     (define-key map [backspace] #'livemacs-regress)
-    (define-key map "C-c C-c" #'livemacs-stop)
+    (define-key map (kbd "C-c C-c") #'livemacs-stop)
     map)
   "Keymap used in a `livemacs' buffer.
 Default bindings setup all ASCII chars to be used for advancing
