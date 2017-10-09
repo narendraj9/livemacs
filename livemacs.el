@@ -29,14 +29,14 @@
 (defgroup livemacs nil
   "Group for customization related to livemacs.el.")
 
-(defcustom livemacs-next-position #'1+
+(defcustom livemacs-next-position (lambda (p) (+ (random 5) p))
   "Function to compute the next position up to which buffer is made visible.
 Calling (livemacs-advance-point livemacs-buffer-position) should
 return the next value for `livemacs-buffer-position'."
   :group 'livemacs
   :type 'function)
 
-(defcustom livemacs-prev-position #'1-
+(defcustom livemacs-prev-position (lambda (p) (- p (random 5)))
   "Function called to regress visible point.
 See `livemacs-next-position'."
   :group 'livemacs
