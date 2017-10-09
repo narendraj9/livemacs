@@ -8,8 +8,12 @@ commands that let you replay text in the current buffer.
 (use-package livemacs
   :commands livemacs-begin
   :load-path "/path/to/livemacs/")
+```
 
-M-x livemacs-start
+To see it in action, switch to the buffer that you want to replay.
+
+```
+M-x livemacs-begin
 ```
 
 To customize expansion/reduction of the visible portion of text in buffer as
