@@ -117,5 +117,31 @@ Replaying is stopped when any key other than those specified in
   (livemacs-reset)
   (message "Stopped livemacs!"))
 
+;;; Example function to move around in an `eshell' buffer.
+;;; Tries to imitate `doitlive'.
+(defun livemacs-next-position-eshell (pos)
+  "Return next position to advance to given POS is currently visible.
+This implementation is extremely inefficient."
+  (let ((eshell-text (buffer-substring (point-min) (point-max))))
+    (with-temp-buffer
+      (insert eshell-text)
+      (eshell-mode)
+      ;; First prompt
+      (if (not (= pos 1))
+          (goto-char pos)
+        (goto-char (point-min))
+        (eshell-next-prompt 1))
+      (let* ((prev-pos (save-excursion
+                         (eshell-previous-prompt 1)
+                         (eshell-next-prompt 1)
+                         (point)))
+             (end-line-pos (line-end-position))
+             (next-pos (save-excursion
+                         (eshell-next-prompt 1)
+                         (point))))
+        (if (< prev-pos pos end-line-pos)
+            (+ pos (random 5))
+          next-pos)))))
+
 (provide 'livemacs)
 ;;; livemacs.el ends here
