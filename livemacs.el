@@ -42,11 +42,24 @@ See `livemacs-next-position'."
   :group 'livemacs
   :type 'functionl)
 
+(defcustom livemacs-timer-delay 1
+  "Initial delay for `livemacs-start-timer'."
+  :group 'livemacs
+  :type 'number)
+
+(defcustom livemacs-timer-interval 0.1
+  "Timer interval for timer started with `livemacs-start-timer'."
+  :group 'livemacs
+  :type 'number)
+
 (defvar-local livemacs-buffer-position 1
   "Starting position for invisible text in replaying buffer.")
 
 (defvar-local livemacs-exitfun nil
   "Function to exit livemacs.")
+
+(defvar-local livemacs-timer nil
+  "Timer to automatically advance visible text.")
 
 (defcustom livemacs-transient-map
   (let ((map (make-sparse-keymap)))
@@ -56,6 +69,7 @@ See `livemacs-next-position'."
                   (mapcar #'char-to-string (number-sequence ?A ?z))))
     (define-key map [backspace] #'livemacs-regress)
     (define-key map (kbd "C-c C-c") #'livemacs-stop)
+    (define-key map (kbd "C-c C-t") #'livemacs-start-timer)
     map)
   "Keymap used in a `livemacs' buffer.
 Default bindings setup all ASCII chars to be used for advancing
@@ -97,7 +111,10 @@ Binds \[livemacs-stop] to `livemacs-stop'."
   "Reset `livemacs' maintained state in current buffer."
   (livemacs-show-text (point-min) (point-max))
   (setq livemacs-buffer-position 1)
-  (setq livemacs-exitfun nil))
+  (setq livemacs-exitfun nil)
+  (when (and livemacs-timer
+             (timerp livemacs-timer))
+    (cancel-timer livemacs-timer)))
 
 (defun livemacs-begin ()
   "Replay text visible in current buffer when `livemacs-keys' are pressed.
@@ -116,6 +133,16 @@ Replaying is stopped when any key other than those specified in
     (funcall livemacs-exitfun))
   (livemacs-reset)
   (message "Stopped livemacs!"))
+
+(defun livemacs-start-timer ()
+  "Start timer that automatically advances visible text in buffer."
+  (interactive)
+  (setq livemacs-timer
+        (run-with-timer livemacs-timer-delay
+                        livemacs-timer-interval
+                        #'livemacs-advance)))
+
+
 
 ;;; Example function to move around in an `eshell' buffer.
 ;;; Tries to imitate `doitlive'.
