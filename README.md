@@ -1,7 +1,7 @@
 livemacs
 ========
 
-Inspired by https://doitlive.readthedocs.io/en/latest/, this library provides
+Inspired by https://doitlive.readthedocs.io/en/latest/, this module provides
 commands that let you replay text in the current buffer. 
 
 ```elisp
@@ -21,7 +21,7 @@ you press keys, set `livemacs-next-position` and `livemacs-prev-position`.
 To customize the keymap used while replaying text, set
 `livemacs-transient-map`.
 
-See `livemacs-next-position-eshell` for an example of how to use the library. 
+See `livemacs-next-position-eshell` for an example of how to use the module. 
 With `(setq livemacs-next-position livemacs-next-position-eshell)`, you can achieve the same functionality as [doitlive](https://doitlive.readthedocs.io/en/latest/) in `eshell`.
 
 
